@@ -1,0 +1,125 @@
+<div class="text-center border border-dark border-3" style="margin: auto; border-radius: 12px; margin-top:2rem; max-width: 25rem; max-height:80vh;overflow-y:overlay;position: relative;">
+<div class="card mt-5 m-auto border-2 border" style="width: 20rem;" *ngFor="let post of postlist">
+    <img [src]="createimagepath(post.image)" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{post.title}}</h5>
+      <p class="card-text" style="text-align:left">posted by: &nbsp;{{post.applicationuser.userName}}</p>
+      <p class="card-text" style="text-align:left">posted date &nbsp;{{post.publish}}</p>
+      <a data-bs-toggle="modal" data-bs-target="#comment" class="btn btn-primary" (click)="getComment(post.id)"><i class="fa fa-comment"></i></a>&nbsp;
+      <a class="btn" title="like" (click)="LikePost(post)" *ngIf="post.like==false"><img src="assets/images/like.jpg" style="width:2.5rem"></a>
+      <a class="btn" title="Unlike"(click)="UnLikePost(post)" *ngIf="post.like==true"><img src="assets/images/unlike image.webp" style="width:2.5rem"></a> 
+      &nbsp;
+      <a class="btn btn-primary"(click)="follow(post)" *ngIf="post.follow==false && post.userid!=parseid">follow</a>
+      <a class="btn btn-primary"(click)="unFollow(post)" *ngIf="post.follow==true && post.userid!=parseid">Un-follow</a>
+    </div>
+</div>
+</div>
+<!-- creating post button -->
+<div class="row text-center" style=" width:9rem;position:absolute;bottom:5rem;right:5rem;">
+<a class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#createPost" ><i class="fa fa-plus" >&nbsp; Post</i></a>
+<a class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#deletePost" (click)="removePostList()"><i class="fa fa-trash">&nbsp; Remove Post</i></a>
+</div>
+<!-- create post model -->
+<div class="modal fade" id="createPost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Create Post</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="post" >
+            <div class="text-center">
+            <Label for="file"><img src="assets/images/imageUpload.webp" width="80rem"></Label>
+            <input #file formcontolname=""  [(ngModel)]="newPost.image" id="file" (change)="uploadfile($event)" name="image" type="file" style="display: none;">
+            </div>
+            <div class="row m-4">
+                <div class="col-2">
+                <label for="title">Title</label>
+                </div>
+                <div class="col-10">
+                <input [(ngModel)]="newPost.title"  id="title" name="title" type="text" placeholder="Enter the title of post" class="form-control"/>
+                <input [(ngModel)]="newPost.publish" [value]="this.date.toLocaleDateString()" name="publish" style="display:none;"/>
+            </div>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" (click)="sendPost()" class="btn btn-primary" data-bs-dismiss="modal">Publish Post</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- create comment model -->
+<div class="modal fade" id="comment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Comments Block</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="border border-dark border-2" style="width:100%;height: 20vw; border-radius: 8px;overflow-y:overlay;">
+              <p style="text-align: right;padding-right: 26px;font-size: 1.2rem;" *ngFor="let comment of commentlist">{{comment.message}}</p>
+              <p style="text-align: center;padding-right: 26px; font-size: 1rem;" class="text-danger " *ngIf="commentlist.length==0">No comment on this post be the first one to post</p>
+            </div>
+            <form method="post">
+            <div class="row mt-3">
+                <div class="col-10">  
+                <input id="title" type="text" [(ngModel)]="newcomment.message" [ngModelOptions]="{standalone: true}" placeholder="please Enter the Comment" class="form-control"/>
+              </div>
+            <div class="col-2">
+                <a class="btn btn-success" data-bs-dismiss="modal" (click)="sendcomment()">Send</a>
+            </div>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- remove post card -->
+  <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Remove Post Block</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="border border-dark border-2" style="width:100%;height: 20vw; border-radius: 8px;overflow-y:overlay;">
+             <p class="text-danger text-center" *ngIf="getspecifiecpost.length==0">Please Post first to delete the post </p>
+              <table class="table table-hover table-bordered table-sticky" *ngIf="getspecifiecpost.length!=0">
+              <thead>
+                <tr class="text-center">
+                   <th>title</th>
+                   <th>image</th>
+                   <th>publish</th>
+                   <td>Action</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let post of getspecifiecpost">
+                 <td>{{post.title}}</td>
+                 <td><img [src]="createimagepath(post.image)" class="card-img-top" style="width: 58px;" alt="..."/></td>
+                 <td>{{post.publish}}</td>
+                 <td><a class="btn btn-danger" (click)="removepost(post.id)" data-bs-dismiss="modal"><i class="fa fa-trash"></i></a></td>
+                 </tr>
+              </tbody>
+             </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+

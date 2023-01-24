@@ -1,0 +1,93 @@
+<!-- alet messge loign or signup -->
+<div class="alert alert-success" role="alert"*ngIf="displaymessage!='' && dangersuccess==true">
+    {{displaymessage}}
+  </div>
+  <div class="alert alert-danger" role="alert"*ngIf="displaymessage!='' && dangersuccess==false">
+    {{displaymessage}}
+  </div>
+<div class="row m-auto mt-5" style="max-width:40vw">
+    <!-- card header -->
+    <div class="row"  style="cursor:pointer">
+    <div class="col-6 border-primary text-center" [style]="loginbtnstyle">
+      <h2 (click)="login()">Login</h2>
+    </div>
+    <div class="col-6 text-center border-primary" [style]="signupbtnStyle">
+    <h2 (click)="signup()">Sign Up</h2>
+    </div>
+    </div>
+     <!-- login card body -->
+    <div class="row p-5" id="loginbody" *ngIf="loginsignupcheck==false">
+        <form>
+        <div class="row pt-3">
+            <div class="col-4 text-center" style="font-size: 1.2rem;">
+                <label class="" for="name">UserName</label>
+            </div>
+            <div class="col-7 text-center">
+                <input type="text" id="name" name="username" [(ngModel)]="logindata.username" class="form-control" placeholder="Enter your username"/>
+            </div>
+        </div>
+       
+        <div class="row pt-4">
+            <div class="col-4 text-center" style="font-size: 1.2rem;">
+                <label class="" for="password">Password</label>
+            </div>
+            <div class="col-7 text-center">
+                <input [(ngModel)]="logindata.password" name="userpassword" type="password" id="password" class="form-control" placeholder="Enter your password"/>
+            </div>
+        </div>
+        </form>
+    </div>
+    <!-- signup card body -->
+    <div class="row p-5" id="signupbody" *ngIf="loginsignupcheck==true">
+        <form>
+        <div class="row pt-3">
+            <div class="col-4 text-center" style="font-size: 1.2rem;">
+                <label class="" for="username">UserName</label>
+            </div>
+            <div class="col-7 text-center">
+                <input [(ngModel)]="singupdata.userName" name="username"  type="text" id="username" class="form-control" placeholder="Enter your username"/>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-4 text-center" style="font-size: 1.2rem;">
+                <label class="" for="email">Email</label>
+            </div>
+            <div class="col-7 text-center">
+                <input  [(ngModel)]="singupdata.userEmail" name="useremail" type="email" id="name" class="form-control" placeholder="Enter your Email"/>
+            </div>
+        </div>
+       
+        <div class="row pt-4">
+            <div class="col-4 text-center" style="font-size: 1.2rem;">
+                <label class="" for="password">Password</label>
+            </div>
+            <div class="col-7 text-center">
+                <input [(ngModel)]="singupdata.password" name="userpasword" type="password" id="password" class="form-control" placeholder="Enter your password"/>
+            </div>
+        </div>
+        <div class="row pt-4">
+            <div class="col-4 text-center" style="font-size: 1.2rem;">
+                <label class="" for="repassword">Re Password</label>
+            </div>
+            <div class="col-7 text-center">
+                <input [(ngModel)]="reentePassword" name="reentePassword" type="password" id="repassword" class="form-control" placeholder="Enter reenter your password"/>
+            </div>
+        </div>
+        </form>
+    </div>
+    <div class="row">
+     <button type="submit" class="btn btn-success form-control" *ngIf="loginsignupcheck==false" (click)="loginClick()">Login</button>
+     <button type="submit" class="btn btn-success form-control" *ngIf="loginsignupcheck==true" (click)="signupClick()">SignUp</button>
+    </div>
+    <div class="text-center">
+        <hr>
+        <h4>{{loginsignup}} with </h4>
+        <div class="row text-center offset-4">
+       <div class="col-lg-1 offset-1"><i class="fa fa-google btn btn-primary" (click)="LoginWithGoogle()" style="height: 2rem;"></i></div>
+       <div class="col-lg-1 offset-1"><i class="fa fa-facebook btn btn-primary" (click)="loginwithFacebook()" style="height: 2rem;"></i></div>
+
+    </div>
+    </div>
+</div>
+
